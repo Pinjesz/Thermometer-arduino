@@ -160,7 +160,7 @@ void writeNumberFour(int number, int point) {
     if (numbers[i] != 0 || displayZeros) {
       writeNumberSingle(numbers[i]);
       digitalWrite(digits[i], 0);
-      delay(10);
+      delay(5);
       digitalWrite(digits[i], 1);
       displayZeros = true;
     }
