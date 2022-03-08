@@ -1,28 +1,29 @@
 void setup() {
 
   // setup the pins
-  pinMode(dataDisplayPin, OUTPUT);digitalWrite(dataDisplayPin, 0); 
-  pinMode(showDisplayPin, OUTPUT);digitalWrite(showDisplayPin, 0); 
-  pinMode(clockDisplayPin, OUTPUT);digitalWrite(clockDisplayPin, 0); 
-  for (auto pinNumber:digits) {
-    pinMode(pinNumber, OUTPUT);digitalWrite(pinNumber, 1); // high for 7-segment display (timer)
+  pinMode(dataDisplayPin, OUTPUT); digitalWrite(dataDisplayPin, 0);
+  pinMode(showDisplayPin, OUTPUT); digitalWrite(showDisplayPin, 0);
+  pinMode(clockDisplayPin, OUTPUT); digitalWrite(clockDisplayPin, 0);
+  for (auto pinNumber : digits) {
+    pinMode(pinNumber, OUTPUT); digitalWrite(pinNumber, 1); // high for 7-segment display (timer)
   }
   // PWM for LED
-  pinMode(redPin, OUTPUT);analogWrite(redPin, 0);
-  pinMode(greenPin, OUTPUT);analogWrite(greenPin, 0);
-  pinMode(bluePin, OUTPUT);analogWrite(bluePin, 0);
+  pinMode(redPin, OUTPUT); analogWrite(redPin, 0);
+  pinMode(greenPin, OUTPUT); analogWrite(greenPin, 0);
+  pinMode(bluePin, OUTPUT); analogWrite(bluePin, 0);
   // sensors
   pinMode(temperaturePin, INPUT);
   pinMode(infraredPin, INPUT);
-  
+
   Serial.begin(BAUD_RATE);
   Serial.println(F("Start termometra"));
 
 
   // start the thermometer
   dht.begin();
-  lastMeasurement = - measureBreak;
-
+  lastMeasurement = 0;
+  timer = TIMER_START;
+  timerChanger = 0;
 
   // setup button debouncing
   previousButtonReading = false;
@@ -50,32 +51,36 @@ void setup() {
   previousSoundOn = false;
   turnLightOn = true;
   sound = 0;
-  lastSoundChange = false;
-  soundChanged = false;
-  previousSound = 100;
+  lastSoundChange = 0;
+  updateColorLED = true;
+  previousSound = MAX_ANALOG_READ;
 
 
   // set help variables
   view = false;
-  change = true;
+  updateDisplayLCD = true;
 
 
   // get position for temperature
-  temporary = potentiometer / (POTENTIOMETER_RANGE / TEMP_POSSIBILITIES);
+  temporary = potentiometer / ((float)MAX_ANALOG_READ / TEMP_POSSIBILITIES);
   tempPosition = temporary;
   previousTempPosition = temporary;
 
 
   // get position for humidity
-  temporary = potentiometer / (POTENTIOMETER_RANGE / HUMI_POSSIBILITIES);
+  temporary = potentiometer / ((float)MAX_ANALOG_READ / HUMI_POSSIBILITIES);
   humiPosition = temporary;
   previousHumiPosition = temporary;
 
 
   // infrared
   IrReceiver.begin(infraredPin, ENABLE_LED_FEEDBACK);
+  command = 0;
+  previousCommand = 0;
+  lastCommand = - sameCommandDelay;
 
-
-  // start value for the timer
-  timer = measureBreak/1000;
+  // 7digits display
+  place = 0;
+  displayMode = false;
+  displayDelay = 30;
 }

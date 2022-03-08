@@ -1,13 +1,6 @@
 void loop() {
-  if (millis() - lastMeasurement >= measureBreak) {
-    getTemperatureAndHumidity();
 
-    updateLED();
-  }
-
-  if (soundChanged == true) {
-    updateLED();
-  }
+  checkTimer();
 
   checkForButtonPress();
 
@@ -17,9 +10,11 @@ void loop() {
 
   getInfraredReading();
 
-  if (change == true) {
-    updateDisplay();
+  if (updateColorLED == true) {
+    setColorLED();
   }
 
-  writeTimer();
+  if (updateDisplayLCD == true) {
+    setDisplayLCD();
+  }
 }
