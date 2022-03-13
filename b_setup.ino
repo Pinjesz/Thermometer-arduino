@@ -16,7 +16,6 @@ void setup() {
   pinMode(infraredPin, INPUT);
 
   Serial.begin(BAUD_RATE);
-  Serial.println(F("Start termometra"));
 
 
   // start the thermometer
@@ -83,4 +82,7 @@ void setup() {
   place = 0;
   displayMode = false;
   displayDelay = 30;
+
+  // brightness
+  light = 0;
 }

@@ -1,17 +1,15 @@
 void getTemperatureAndHumidity() {
   h = dht.readHumidity();
   t = dht.readTemperature();
+  light = (100.0 * analogRead(lightPin))/MAX_ANALOG_READ;
 
   if (isnan(h) || isnan(t)) {
-    Serial.println(F("Nie udało się odczytać danych z czujnika DHT!"));
+    Serial.println("Nie udało się odczytać danych z czujnika DHT!");
   }
   else {
-    Serial.print(F("Temperatura: "));
-    Serial.print(t);
-    Serial.print(F("℃"));
-    Serial.print(F(" Wilgotność: "));
-    Serial.print(h);
-    Serial.println(F("%"));
+    dtostrf(t, 4, 1, t_str);
+    sprintf(buff, "Temperatura(℃):%s,Wilgotność(%%):%03i,Jasność(%%):%03i\n", t_str, h, light);
+    Serial.print(buff);
   }
 
   updateDisplayLCD = true;
@@ -19,8 +17,6 @@ void getTemperatureAndHumidity() {
   lastMeasurement = millis();
   timer = measureBreak;
   timerChanger = 0;
-
-  Serial.println(analogRead(lightPin));
   previousSound = MAX_ANALOG_READ;
 }
 
